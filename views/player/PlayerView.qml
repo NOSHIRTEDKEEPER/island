@@ -40,7 +40,18 @@ Item {
     function onPositionChanged() { if (!player.dragging) player.position = player.mpris.position }
   }
 
-  function action(name) { if (host.media) host.media.runAction(name, false, "") }
+  function action(name) {
+    if (host.media) {
+      host.media.runAction(name, false, "")
+      return
+    }
+    if (!mpris) return
+    if (name === "previous" && mpris.canGoPrevious) mpris.previous()
+    else if (name === "next" && mpris.canGoNext) mpris.next()
+    else if (name === "playPause" && mpris.canTogglePlaying) mpris.togglePlaying()
+    else if (name === "playPause" && playing && mpris.canPause) mpris.pause()
+    else if (name === "playPause" && !playing && mpris.canPlay) mpris.play()
+  }
   function seekTo(seconds) {
     if (!canSeek) return
     var target = Math.max(0, Math.min(length, seconds))

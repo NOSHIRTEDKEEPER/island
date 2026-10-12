@@ -3,6 +3,7 @@ import QtQuick
 import Quickshell
 import Quickshell.Hyprland
 import Quickshell.Io
+import Quickshell.Services.Mpris
 import Quickshell.Services.Pipewire
 import Quickshell.Wayland
 import "components"
@@ -22,7 +23,15 @@ Item {
     })
     property string omarchyPath: ""
     readonly property var media: shell ? shell.firstPartyServiceFor("omarchy.media") : null
-    readonly property var player: media ? media.activePlayer : null
+    // Keep now-playing metadata available even when the Omarchy media proxy
+    // has not selected an active player yet (common for browser MPRIS players).
+    readonly property var directPlayer: {
+        var players = Mpris.players ? Mpris.players.values : [];
+        for (var i = 0; i < players.length; i++) if (players[i] && players[i].isPlaying) return players[i];
+        for (var j = 0; j < players.length; j++) if (players[j] && (players[j].trackTitle || players[j].trackArtist)) return players[j];
+        return null;
+    }
+    readonly property var player: media && media.activePlayer ? media.activePlayer : directPlayer
     readonly property bool mediaPlaying: !!(player && player.isPlaying)
     readonly property string reportedArt: player && player.trackArtUrl ? String(player.trackArtUrl) : ""
     readonly property string mediaTitle: player ? String(player.trackTitle || "") : ""
@@ -946,8 +955,8 @@ Item {
                     id: island
 
                     readonly property Item activeSurface: views.surfaceFor(root.view)
-                    readonly property real targetWidth: activeSurface ? activeSurface.islandWidth : root.notificationPill ? 440 : root.volumePill || root.brightnessPill ? 240 : root.clipboardPill ? 320 : root.view === "feedback" ? 280 : root.downloadDone ? 360 : root.downloadActive ? (root.downloadTracker.active ? 240 : 280) : root.mediaPill ? 240 : 100
-                    readonly property real targetHeight: activeSurface ? activeSurface.islandHeight : root.notificationPill ? 84 : root.clipboardPill ? (root.islandSettings.notch ? 40 : 44) : root.downloadDone ? 64 : root.mediaPill || root.downloadPill ? (root.islandSettings.notch ? 40 : 44) : root.volumePill || root.brightnessPill ? 56 : root.view === "rest" ? 28 : 42
+                    readonly property real targetWidth: activeSurface ? activeSurface.islandWidth : root.notificationPill ? 440 : root.volumePill || root.brightnessPill ? 240 : root.clipboardPill ? 320 : root.view === "feedback" ? 280 : root.downloadDone ? 360 : root.downloadActive ? (root.downloadTracker.active ? 240 : 280) : root.mediaPill ? 320 : 100
+                    readonly property real targetHeight: activeSurface ? activeSurface.islandHeight : root.notificationPill ? 84 : root.clipboardPill ? (root.islandSettings.notch ? 40 : 44) : root.downloadDone ? 64 : root.mediaPill ? (root.islandSettings.notch ? 50 : 54) : root.downloadPill ? (root.islandSettings.notch ? 40 : 44) : root.volumePill || root.brightnessPill ? 56 : root.view === "rest" ? 28 : 42
                     property real radiusCap: root.volumePill || root.brightnessPill ? 20 : root.view === "answer" ? 44 : root.surfaceOpen ? 30 : 38
                     readonly property real springStiffness: 6.5 / root.motionScale
                     property real springWidth: targetWidth

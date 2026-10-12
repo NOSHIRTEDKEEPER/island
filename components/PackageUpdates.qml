@@ -15,7 +15,7 @@ Item {
   property string logPath: "/var/log/pacman.log"
 
   property bool active: false
-  // "Syncing", "Downloading", "Installing", "Building", "Finishing"
+  // "Syncing", "Downloading", "Installing", "Building", "Updating", "Finishing"
   property string phase: ""
   property int count: 0
   property int removedCount: 0
@@ -34,7 +34,7 @@ Item {
   property double startedAt: 0
   property real lastRx: -1
   property double lastRxAt: 0
-  property bool sawTransaction: false
+  property bool transactionRunning: false
   property bool upgrade: false
 
   function formatSpeed(n) {
@@ -61,7 +61,7 @@ Item {
     removedCount = 0
     speed = 0
     lastRx = -1
-    sawTransaction = false
+    transactionRunning = false
     upgrade = false
     startedAt = Date.now()
     logOffset = -1
@@ -75,7 +75,8 @@ Item {
     onTriggered: tracker.poll()
   }
 
-  // One line per fact: the lock ("L"), running tools ("P name"), the package
+  // One line per fact: the pacman lock ("L"), Omarchy update lock ("O"),
+  // running tools ("P name"), the package
   // makepkg is building ("B name"), bytes received ("R n"), the log's size
   // ("S n"), then the log since the run started.
   Process {
@@ -89,6 +90,7 @@ Item {
     if (scan.running) return
     scan.command = ["sh", "-c",
       '[ -e "$2/db.lck" ] && echo L; '
+      + 'runtime="${XDG_RUNTIME_DIR:-/tmp}"; if [ -e "$runtime/omarchy-update.lock" ] && ! flock -n "$runtime/omarchy-update.lock" -c true; then echo O; fi; '
       + 'pgrep -x "pacman|yay|paru|omarchy-update" | while read p; do echo "P $(cat /proc/$p/comm 2>/dev/null)"; done; '
       + 'for p in $(pgrep -x makepkg); do echo "B $(basename "$(readlink /proc/$p/cwd 2>/dev/null)")"; done; '
       + 'rx=0; for f in /sys/class/net/*/statistics/rx_bytes; do case "$f" in */lo/*) ;; *) rx=$((rx + $(cat "$f"))) ;; esac; done; echo "R $rx"; '
@@ -101,9 +103,10 @@ Item {
   function apply(output) {
     var parts = output.split("--LOG--\n")
     var lines = parts[0].split("\n")
-    var locked = false, tools = [], building = "", rx = -1, size = 0
+    var locked = false, omarchyLocked = false, tools = [], building = "", rx = -1, size = 0
     lines.forEach(function(line) {
       if (line === "L") locked = true
+      else if (line === "O") omarchyLocked = true
       else if (line.indexOf("P ") === 0) tools.push(line.slice(2))
       else if (line.indexOf("B ") === 0 && line.length > 2) building = line.slice(2)
       else if (line.indexOf("R ") === 0) rx = Number(line.slice(2))
@@ -118,7 +121,7 @@ Item {
       return
     }
 
-    tool = tools.indexOf("omarchy-update") >= 0 ? "omarchy"
+    tool = omarchyLocked || tools.indexOf("omarchy-update") >= 0 ? "omarchy"
       : tools.indexOf("paru") >= 0 ? "paru"
       : tools.indexOf("yay") >= 0 ? "yay"
       : "pacman"
@@ -132,7 +135,7 @@ Item {
     lastRxAt = now
 
     var log = parts.length > 1 ? parts[1] : ""
-    var done = 0, removed = 0, completed = false, hooks = false, started = sawTransaction
+    var done = 0, removed = 0, completed = false, hooks = false, started = transactionRunning
     log.split("\n").forEach(function(line) {
       var m = line.match(/^\[([^\]]+)\] \[(\w+)\] (.*)$/)
       if (!m) return
@@ -142,21 +145,26 @@ Item {
       var pkg = msg.match(/^(upgraded|installed|removed|downgraded|reinstalled) (\S+)/)
       if (m[2] === "PACMAN" && /starting full system upgrade/.test(msg)) tracker.upgrade = true
       if (msg === "transaction started") { started = true; completed = false; hooks = false }
-      else if (msg === "transaction completed") completed = true
+      else if (msg === "transaction completed") { started = false; completed = true }
       else if (/^running '.*\.hook'/.test(msg)) hooks = true
       else if (pkg) { done++; if (pkg[1] === "removed") removed++ }
     })
-    sawTransaction = started
+    transactionRunning = started
     count = done
     removedCount = removed
 
+    var packageToolRunning = tools.indexOf("pacman") >= 0 || tools.indexOf("paru") >= 0 || tools.indexOf("yay") >= 0
+    var packageWork = locked || packageToolRunning
     phase = building && !locked ? "Building"
+      : (packageWork || omarchyLocked) && speed > 20480 ? "Downloading"
+      : packageWork && started ? "Installing"
+      : packageWork ? "Syncing"
+      : omarchyLocked ? "Updating"
       : completed || hooks ? "Finishing"
       : started ? "Installing"
-      : locked && speed > 20480 ? "Downloading"
       : "Syncing"
 
-    if (!locked && tools.length === 0 && !building) finish()
+    if (!locked && !omarchyLocked && tools.length === 0 && !building) finish()
   }
 
   function finish() {

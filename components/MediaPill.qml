@@ -9,6 +9,7 @@ Item {
   id: media
   required property var host
   readonly property bool shown: host.mediaPill
+  readonly property string title: host.mediaTitle || (host.player ? host.player.identity || host.player.desktopEntry || "Now playing" : "Now playing")
 
   opacity: shown ? 1 : 0
   visible: opacity > 0.01
@@ -19,7 +20,7 @@ Item {
     anchors.left: parent.left
     anchors.leftMargin: 8
     anchors.verticalCenter: parent.verticalCenter
-    width: 30; height: 30; radius: 8
+    width: 38; height: 38; radius: 10
     color: media.host.withAlpha(media.host.colorAccent, 0.3)
     Image {
       id: artImage
@@ -40,11 +41,41 @@ Item {
       text: "󰝚"
       color: media.host.colorAccentText
       font.family: media.host.fontFamily
-      font.pixelSize: 14
+      font.pixelSize: 17
+    }
+  }
+
+  Column {
+    anchors.left: art.right
+    anchors.leftMargin: 10
+    anchors.right: levels.left
+    anchors.rightMargin: 8
+    anchors.verticalCenter: parent.verticalCenter
+    spacing: 1
+    Text {
+      width: parent.width
+      text: media.title
+      textFormat: Text.PlainText
+      elide: Text.ElideRight
+      color: media.host.colorText
+      font.family: media.host.fontFamily
+      font.pixelSize: 12
+      font.weight: Font.DemiBold
+    }
+    Text {
+      width: parent.width
+      visible: text.length > 0
+      text: media.host.player ? String(media.host.player.trackArtist || "") : ""
+      textFormat: Text.PlainText
+      elide: Text.ElideRight
+      color: media.host.colorMuted
+      font.family: media.host.fontFamily
+      font.pixelSize: 10
     }
   }
 
   Row {
+    id: levels
     anchors.right: parent.right
     anchors.rightMargin: 16
     anchors.verticalCenter: parent.verticalCenter

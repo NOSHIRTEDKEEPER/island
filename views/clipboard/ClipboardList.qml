@@ -3,6 +3,7 @@ import Quickshell
 import Quickshell.Io
 import Quickshell.Widgets
 import "../../components"
+import qs.Commons
 // Omarchy's own history helpers, so search and previews match its picker.
 import "file:///usr/share/omarchy/shell/plugins/clipboard/ClipboardHistory.js" as ClipboardHistory
 
@@ -116,7 +117,7 @@ ListPicker {
           visible: preview.isImage && previewImage.status === Image.Error
           text: "Image unavailable"
           color: clipboard.host.colorMuted
-          font.family: "Adwaita Sans"
+          font.family: Style.font.family
           font.pixelSize: 12
         }
         Text {
@@ -128,7 +129,7 @@ ListPicker {
           elide: Text.ElideRight
           clip: true
           color: clipboard.host.colorText
-          font.family: "Adwaita Sans"
+          font.family: Style.font.family
           font.pixelSize: 15
           lineHeight: 1.3
         }
@@ -184,7 +185,7 @@ ListPicker {
         elide: Text.ElideRight
         maximumLineCount: 1
         color: clipRow.ink
-        font.family: "Adwaita Sans"
+        font.family: Style.font.family
         font.pixelSize: 14
         font.weight: clipRow.selected ? Font.Medium : Font.Normal
       }

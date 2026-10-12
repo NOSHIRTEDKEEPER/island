@@ -1,14 +1,17 @@
 {
   "schemaVersion": 1,
-  "id": "guilhermerisu.island",
-  "name": "Island",
+  "id": "hholt.island-clock",
+  "name": "Island Clock Overlay",
   "version": "0.1.0",
-  "author": "guilhermerisu",
-  "description": "A floating, morphing Omarchy bar",
+  "author": "NOSHIRTEDKEEPER",
+  "description": "Island dynamic clock and activity pill as an overlay on the Omarchy bar",
   "kinds": [
-    "bar"
+    "bar-widget"
   ],
   "entryPoints": {
-    "bar": "Island.qml"
+    "barWidget": "Island.qml"
+  },
+  "omarchy": {
+    "clonedFrom": "guilhermerisu.island"
   }
 }

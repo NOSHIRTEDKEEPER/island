@@ -1,6 +1,7 @@
 import QtQuick
 import Quickshell.Io
 
+import qs.Commons
 // Shared picker surface for the island's switchers: a search field over a
 // carousel of cards, with the neighbours fading into the island. The selected
 // card stays centered, except that the first and last cards sit flush with
@@ -271,7 +272,7 @@ Item {
       visible: picker.filtered.length === 0 && picker.items.length > 0
       text: picker.emptyText
       color: picker.host.colorMuted
-      font.family: "Adwaita Sans"
+      font.family: Style.font.family
       font.pixelSize: 13
     }
   }

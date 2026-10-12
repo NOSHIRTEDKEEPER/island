@@ -3,6 +3,7 @@ import Quickshell
 import Quickshell.Io
 import "../../components"
 
+import qs.Commons
 // Keybindings: the shared list view over Omarchy's keybinding list (what the
 // binding does, with its keys as keycaps). Type to search by description or
 // keys ("super t"), Enter or a click to run the binding, like Omarchy's own
@@ -90,7 +91,7 @@ ListPicker {
         textFormat: Text.PlainText
         elide: Text.ElideRight
         color: keybinds.host.colorText
-        font.family: "Adwaita Sans"
+        font.family: Style.font.family
         font.pixelSize: 16
         font.weight: Font.Medium
       }
@@ -117,7 +118,7 @@ ListPicker {
               text: String(cap.modelData)
               textFormat: Text.PlainText
               color: keybinds.host.colorMuted
-              font.family: "Adwaita Sans"
+              font.family: Style.font.family
               font.pixelSize: 11
               font.weight: Font.DemiBold
             }

@@ -4,6 +4,7 @@ import Quickshell
 import Quickshell.Io
 import "../../components"
 
+import qs.Commons
 // Theme picker: one card per installed theme showing its background color
 // and palette. Applying runs omarchy-theme-set.
 Picker {
@@ -43,7 +44,7 @@ Picker {
         elide: Text.ElideRight
         text: themeCard.entry.name || ""
         color: themeCard.entry.foreground || ts.host.colorText
-        font.family: "Adwaita Sans"
+        font.family: Style.font.family
         font.pixelSize: 13
         font.weight: Font.DemiBold
       }

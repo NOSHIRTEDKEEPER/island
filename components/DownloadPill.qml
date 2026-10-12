@@ -1,5 +1,6 @@
 import QtQuick
 
+import qs.Commons
 // Download live activity, in iOS's style, fed by Downloads.qml (browser
 // downloads) and PackageUpdates.qml (system updates). While running: an icon
 // inside a spinning ring left of the clock, and the speed or phase on the
@@ -89,7 +90,7 @@ Item {
         visible: !pill.packageMode && pill.tracker.items.length > 1
         text: pill.tracker.items.length
         color: Qt.rgba(1, 1, 1, 0.5)
-        font.family: "Adwaita Sans"
+        font.family: Style.font.family
         font.pixelSize: 12
         font.weight: Font.DemiBold
         font.features: { "tnum": 1 }
@@ -99,7 +100,7 @@ Item {
           : pill.tracker.speed > 0 ? pill.formatBytes(pill.tracker.speed) + "/s" : pill.formatBytes(pill.tracker.bytes)
         textFormat: Text.PlainText
         color: "#ffffff"
-        font.family: "Adwaita Sans"
+        font.family: Style.font.family
         font.pixelSize: 12
         font.weight: Font.DemiBold
         font.letterSpacing: -0.2
@@ -146,7 +147,7 @@ Item {
         textFormat: Text.PlainText
         elide: Text.ElideMiddle
         color: "#ffffff"
-        font.family: "Adwaita Sans"
+        font.family: Style.font.family
         font.pixelSize: 15
         font.weight: Font.DemiBold
         font.letterSpacing: -0.2
@@ -158,7 +159,7 @@ Item {
         textFormat: Text.PlainText
         elide: Text.ElideRight
         color: Qt.rgba(1, 1, 1, 0.55)
-        font.family: "Adwaita Sans"
+        font.family: Style.font.family
         font.pixelSize: 12
       }
     }
@@ -178,7 +179,7 @@ Item {
         anchors.centerIn: parent
         text: "Open"
         color: pill.host.colorAccent
-        font.family: "Adwaita Sans"
+        font.family: Style.font.family
         font.pixelSize: 14
         font.weight: Font.Bold
       }

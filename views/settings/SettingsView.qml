@@ -2,6 +2,7 @@ import QtQuick
 import QtQuick.Layouts
 import Quickshell.Io
 
+import qs.Commons
 // The island's own settings, laid out like macOS System Settings: a sidebar
 // with search, and a pane of grouped rows. Opened from
 // the control center's gear; Esc goes back to it. Changes apply live and are
@@ -10,7 +11,7 @@ Item {
   id: settingsView
   required property var host
   property bool active: false
-  readonly property var settings: host.settings
+  readonly property var settings: host.islandSettings
   property string currentPage: "General"
   property string searchQuery: ""
   readonly property var pages: ["General", "Search", "Live Activities", "Notifications", "Keybinds"]
@@ -125,7 +126,7 @@ Item {
       anchors.verticalCenter: parent.verticalCenter
       text: pop.currentLabel
       color: settingsView.text
-      font.family: "Adwaita Sans"
+      font.family: Style.font.family
       font.pixelSize: 13
     }
     Column {
@@ -168,7 +169,7 @@ Item {
       anchors.centerIn: parent
       text: button.label
       color: button.primary ? settingsView.accentInk : settingsView.text
-      font.family: "Adwaita Sans"
+      font.family: Style.font.family
       font.pixelSize: 13
       font.weight: button.primary ? Font.DemiBold : Font.Normal
     }
@@ -231,7 +232,7 @@ Item {
         text: row.label
         elide: Text.ElideRight
         color: settingsView.text
-        font.family: "Adwaita Sans"
+        font.family: Style.font.family
         font.pixelSize: 13
       }
       Text {
@@ -240,7 +241,7 @@ Item {
         text: row.detail
         elide: Text.ElideRight
         color: settingsView.textMuted
-        font.family: "Adwaita Sans"
+        font.family: Style.font.family
         font.pixelSize: 11
       }
     }
@@ -277,7 +278,7 @@ Item {
       Layout.leftMargin: 2
       text: group.title
       color: settingsView.text
-      font.family: "Adwaita Sans"
+      font.family: Style.font.family
       font.pixelSize: 13
       font.weight: Font.DemiBold
     }
@@ -302,7 +303,7 @@ Item {
       text: group.footer
       wrapMode: Text.WordWrap
       color: settingsView.textMuted
-      font.family: "Adwaita Sans"
+      font.family: Style.font.family
       font.pixelSize: 11
     }
   }
@@ -336,7 +337,7 @@ Item {
         horizontalAlignment: Text.AlignHCenter
         text: header.page
         color: settingsView.text
-        font.family: "Adwaita Sans"
+        font.family: Style.font.family
         font.pixelSize: 17
         font.weight: Font.Bold
       }
@@ -348,7 +349,7 @@ Item {
         wrapMode: Text.WordWrap
         lineHeight: 1.1
         color: settingsView.textMuted
-        font.family: "Adwaita Sans"
+        font.family: Style.font.family
         font.pixelSize: 12
       }
     }
@@ -381,7 +382,7 @@ Item {
         text: side.title
         elide: Text.ElideRight
         color: side.selected ? settingsView.accentInk : settingsView.text
-        font.family: "Adwaita Sans"
+        font.family: Style.font.family
         font.pixelSize: 15
       }
     }
@@ -567,7 +568,7 @@ Item {
       text: shortcutRow.entry.label
       elide: Text.ElideRight
       color: settingsView.text
-      font.family: "Adwaita Sans"
+      font.family: Style.font.family
       font.pixelSize: 13
     }
     Rectangle {
@@ -603,7 +604,7 @@ Item {
         text: shortcutRow.recording ? (settingsView.recordHint || "Type Shortcut") : settingsView.shortcutText(shortcutRow.entry.keys)
         color: shortcutRow.recording ? settingsView.accent
           : shortcutRow.entry.keys === "" ? settingsView.textMuted : settingsView.text
-        font.family: "Adwaita Sans"
+        font.family: Style.font.family
         font.pixelSize: 13
         Behavior on color { ColorAnimation { duration: settingsView.animDuration; easing.type: Easing.OutCubic } }
       }
@@ -638,7 +639,7 @@ Item {
       Text {
         text: settingsView.shortcutText(settingsView.pendingKeys) + " is used by " + settingsView.pendingConflict
         color: settingsView.textMuted
-        font.family: "Adwaita Sans"
+        font.family: Style.font.family
         font.pixelSize: 11
       }
     }
@@ -706,7 +707,7 @@ Item {
             visible: searchInput.text === ""
             text: "Search"
             color: settingsView.textMuted
-            font.family: "Adwaita Sans"
+            font.family: Style.font.family
             font.pixelSize: 13
           }
           TextInput {
@@ -717,7 +718,7 @@ Item {
             anchors.rightMargin: 8
             anchors.verticalCenter: parent.verticalCenter
             color: settingsView.text
-            font.family: "Adwaita Sans"
+            font.family: Style.font.family
             font.pixelSize: 13
             onTextChanged: {
               settingsView.searchQuery = text
@@ -746,7 +747,7 @@ Item {
           visible: settingsView.searchQuery !== "" && !settingsView.hasSearchResults
           text: "No Results"
           color: settingsView.textMuted
-          font.family: "Adwaita Sans"
+          font.family: Style.font.family
           font.pixelSize: 13
           Layout.alignment: Qt.AlignHCenter
           Layout.topMargin: 18
@@ -862,7 +863,7 @@ Item {
         visible: settingsView.currentPage === "Live Activities"
         SettingsRow {
           label: "Now Playing"
-          detail: "Show the cover and sound wave while media plays"
+          detail: "Show the live audio spectrum, with track art when available"
           SettingsSwitch {
             checked: settingsView.settings.mediaPill
             onToggled: function(on) { settingsView.settings.mediaPill = on }
@@ -946,7 +947,7 @@ Item {
   property Item menuButton: null
   property var menuOptions: []
   property var menuValue
-  FontMetrics { id: menuFont; font.family: "Adwaita Sans"; font.pixelSize: 13 }
+  FontMetrics { id: menuFont; font.family: Style.font.family; font.pixelSize: 13 }
   function openMenu(button) {
     var widest = 0
     for (var i = 0; i < button.options.length; i++) widest = Math.max(widest, menuFont.advanceWidth(button.options[i].label))
@@ -1010,7 +1011,7 @@ Item {
             anchors.verticalCenter: parent.verticalCenter
             text: menuItem.modelData.label
             color: itemMouse.containsMouse ? settingsView.accentInk : settingsView.text
-            font.family: "Adwaita Sans"
+            font.family: Style.font.family
             font.pixelSize: 13
           }
           MouseArea {

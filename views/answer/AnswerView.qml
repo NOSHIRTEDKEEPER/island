@@ -4,6 +4,7 @@ import Quickshell
 import Quickshell.Io
 import "../../components"
 
+import qs.Commons
 // Siri-style answers: a question typed in the launcher is sent to the chosen
 // AI through its command-line tool, signed in with your own account (Claude
 // Code's `claude -p`, or `codex exec`). Like Siri in the
@@ -169,7 +170,7 @@ Item {
         textFormat: Text.PlainText
         wrapMode: Text.Wrap
         color: answer.error ? answer.host.colorUrgent : "#ffffff"
-        font.family: "Adwaita Sans"
+        font.family: Style.font.family
         font.pixelSize: 21
         font.letterSpacing: -0.3
         lineHeight: 1.1
@@ -204,7 +205,7 @@ Item {
           anchors.centerIn: parent
           text: "Copy"
           color: "#ffffff"
-          font.family: "Adwaita Sans"
+          font.family: Style.font.family
           font.pixelSize: 12
           font.weight: Font.DemiBold
         }

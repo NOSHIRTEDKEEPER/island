@@ -1,6 +1,7 @@
 import QtQuick
 import Quickshell.Io
 
+import qs.Commons
 // Power menu hosted by the island, styled after Apple's Control Center: a
 // row of squircle tiles (icon over label); the selected tile fills with the
 // theme accent and grows a touch. ←/→ (or Tab, or the wheel) to
@@ -142,7 +143,7 @@ Item {
               text: slot.modelData.label
               color: slot.isSelected ? power.host.colorAccentText : power.host.colorText
               opacity: slot.isSelected ? 1 : 0.8
-              font.family: "Adwaita Sans"
+              font.family: Style.font.family
               font.pixelSize: 13
               font.weight: Font.DemiBold
               Behavior on color { ColorAnimation { duration: power.moveDuration } }

@@ -5,6 +5,7 @@ import Quickshell.Io
 import Quickshell.Widgets
 import "../../components"
 
+import qs.Commons
 // Now-playing view, opened from the media pill's cover or wave: cover, title
 // and artist, the live sound wave, a seekable progress bar with elapsed and
 // remaining time, and transport controls. Keys: Space play/pause, ←/→ seek
@@ -106,7 +107,7 @@ Item {
           textFormat: Text.PlainText
           elide: Text.ElideRight
           color: "#ffffff"
-          font.family: "Adwaita Sans"
+          font.family: Style.font.family
           font.pixelSize: 17
           font.weight: Font.DemiBold
         }
@@ -117,7 +118,7 @@ Item {
           textFormat: Text.PlainText
           elide: Text.ElideRight
           color: Qt.rgba(1, 1, 1, 0.55)
-          font.family: "Adwaita Sans"
+          font.family: Style.font.family
           font.pixelSize: 15
         }
       }
@@ -142,7 +143,7 @@ Item {
       Text {
         text: player.clock(player.position)
         color: Qt.rgba(1, 1, 1, 0.55)
-        font.family: "Adwaita Sans"
+        font.family: Style.font.family
         font.pixelSize: 12
         font.weight: Font.Medium
         font.features: { "tnum": 1 }
@@ -177,7 +178,7 @@ Item {
       Text {
         text: "−" + player.clock(player.length - player.position)
         color: Qt.rgba(1, 1, 1, 0.55)
-        font.family: "Adwaita Sans"
+        font.family: Style.font.family
         font.pixelSize: 12
         font.weight: Font.Medium
         font.features: { "tnum": 1 }

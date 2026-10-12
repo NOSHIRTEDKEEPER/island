@@ -2,6 +2,7 @@ import QtQuick
 import Quickshell.Widgets
 import "file:///usr/share/omarchy/shell/plugins/clipboard/ClipboardHistory.js" as ClipboardHistory
 
+import qs.Commons
 // Clipboard live activity, laid out like a Dynamic Island activity on one
 // line: what was copied on the leading side (an image's thumbnail, or a copy
 // or file symbol in the accent), the copied text or file name in the middle,
@@ -92,7 +93,7 @@ Item {
     textFormat: Text.PlainText
     elide: Text.ElideRight
     color: "#ffffff"
-    font.family: "Adwaita Sans"
+    font.family: Style.font.family
     font.pixelSize: 13
     font.weight: Font.Medium
     font.letterSpacing: -0.2
@@ -106,7 +107,7 @@ Item {
     anchors.verticalCenter: parent.verticalCenter
     text: "Copied"
     color: pill.host.colorAccent
-    font.family: "Adwaita Sans"
+    font.family: Style.font.family
     font.pixelSize: 13
     font.weight: Font.DemiBold
     font.letterSpacing: -0.2

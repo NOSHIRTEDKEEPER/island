@@ -104,8 +104,8 @@ Island runs inside Omarchy's Quickshell process and reserves no screen space.
 Requires Omarchy 4 and its Quickshell shell.
 
 ```sh
-omarchy plugin add https://github.com/Guilhermerisu/island.git
-omarchy bar use guilhermerisu.island
+omarchy plugin add https://github.com/NOSHIRTEDKEEPER/island.git
+omarchy bar use hholt.island-clock
 ```
 
 On first launch, click the amber **Click to Setup** pill. It installs
@@ -151,7 +151,7 @@ Choose **None** to turn asking and all AI features off.
 ## Uninstall
 
 ```sh
-bash ~/.config/omarchy/plugins/guilhermerisu.island/companion/uninstall.sh
+bash ~/.config/omarchy/plugins/hholt.island-clock/companion/uninstall.sh
 ```
 
 It switches back to the stock bar, removes the notification companion (Omarchy's

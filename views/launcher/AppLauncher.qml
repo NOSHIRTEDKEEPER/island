@@ -3,6 +3,7 @@ import Quickshell
 import Quickshell.Io
 import Quickshell.Widgets
 import "../../components"
+import qs.Commons
 // Omarchy's own launcher ranking, so results match its menu exactly.
 import "file:///usr/share/omarchy/shell/services/AppSearch.js" as AppSearch
 
@@ -88,7 +89,7 @@ ListPicker {
         textFormat: Text.PlainText
         elide: Text.ElideRight
         color: launcher.host.colorText
-        font.family: "Adwaita Sans"
+        font.family: Style.font.family
         font.pixelSize: 14
         font.weight: Font.DemiBold
       }
@@ -104,7 +105,7 @@ ListPicker {
           id: askLabel
           text: launcher.provider ? "Ask " + launcher.provider.name : ""
           color: launcher.host.colorText
-          font.family: "Adwaita Sans"
+          font.family: Style.font.family
           font.pixelSize: 14
           font.weight: Font.DemiBold
         }
@@ -114,7 +115,7 @@ ListPicker {
           textFormat: Text.PlainText
           elide: Text.ElideRight
           color: launcher.host.colorMuted
-          font.family: "Adwaita Sans"
+          font.family: Style.font.family
           font.pixelSize: 14
         }
       }

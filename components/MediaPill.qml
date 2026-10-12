@@ -44,11 +44,24 @@ Item {
     }
   }
 
-  SoundWave {
+  Row {
     anchors.right: parent.right
     anchors.rightMargin: 16
     anchors.verticalCenter: parent.verticalCenter
-    color: media.host.mediaTint
-    playing: media.shown
+    spacing: 2
+    Repeater {
+      model: 14
+      delegate: Rectangle {
+        required property int index
+        readonly property real level: media.host.audioLevels[Math.floor(index * media.host.audioLevels.length / 14)] || 0
+        width: 2.5
+        height: Math.max(2, 18 * level)
+        radius: width / 2
+        anchors.verticalCenter: parent.verticalCenter
+        color: media.host.mediaTint
+        opacity: 0.55 + level * 0.45
+        Behavior on height { NumberAnimation { duration: 85; easing.type: Easing.OutCubic } }
+      }
+    }
   }
 }

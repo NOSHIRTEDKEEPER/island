@@ -1,6 +1,7 @@
 import QtQuick
 import Quickshell.Widgets
 
+import qs.Commons
 // Dynamic Island–style notification pill: the notification's image or app
 // icon in a rounded tile, with the title and one line of body beside it.
 // Styled like an iOS banner: the title with the time beside it, and the body
@@ -80,7 +81,7 @@ Item {
         // iOS's type: a semibold title and a regular body of nearly the same
         // size, in SF's stand-in (Adwaita Sans).
         color: "#ffffff"
-        font.family: "Adwaita Sans"
+        font.family: Style.font.family
         font.pixelSize: 15
         font.weight: Font.DemiBold
         font.letterSpacing: -0.2
@@ -92,7 +93,7 @@ Item {
         text: host.notificationAge(pill.row.timestamp)
         textFormat: Text.PlainText
         color: Qt.rgba(1, 1, 1, 0.45)
-        font.family: "Adwaita Sans"
+        font.family: Style.font.family
         font.pixelSize: 13
       }
     }
@@ -103,7 +104,7 @@ Item {
       textFormat: Text.PlainText
       elide: Text.ElideRight
       color: Qt.rgba(1, 1, 1, 0.72)
-      font.family: "Adwaita Sans"
+      font.family: Style.font.family
       font.pixelSize: 14
       font.letterSpacing: -0.1
     }

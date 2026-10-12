@@ -1,6 +1,7 @@
 import QtQuick
 import Quickshell.Widgets
 
+import qs.Commons
 // iOS Control Center–style volume, laid on its side: the island becomes a wide
 // slider that fills with the theme accent from the left, speaker glyph near
 // the left end.
@@ -9,14 +10,15 @@ ClippingRectangle {
   required property var host
   // The island rectangle; the slider shares its corner radius.
   required property Item shape
-  readonly property real level: host.muted ? 0 : Math.max(0, Math.min(1, host.volume))
+  readonly property bool brightnessMode: host.brightnessPill
+  readonly property real level: brightnessMode ? Math.max(0, Math.min(1, host.brightnessState / 100)) : host.muted ? 0 : Math.max(0, Math.min(1, host.volume))
   // Animate the level, not the pixel width, so the fill doesn't
   // restart its motion every frame while the island morphs.
   property real shownLevel: level
   Behavior on shownLevel { NumberAnimation { duration: 220 * host.motionScale; easing.type: Easing.OutCubic } }
   radius: shape.radius
   color: "transparent"
-  opacity: host.volumePill ? 1 : 0
+  opacity: host.volumePill || brightnessMode ? 1 : 0
   visible: opacity > 0.01
   Behavior on opacity { NumberAnimation { duration: opacity > 0.5 ? 70 : 150 * host.motionScale; easing.type: Easing.InOutQuad } }
 
@@ -41,10 +43,20 @@ ClippingRectangle {
     anchors.verticalCenter: parent.verticalCenter
     // Accent ink on the fill, light text when the fill doesn't reach it.
     readonly property bool onFill: volumeFill.width > x + width / 2
-    text: slider.level <= 0 ? "󰖁" : slider.level < 0.34 ? "󰕿" : slider.level < 0.67 ? "󰖀" : "󰕾"
+    text: slider.brightnessMode ? "󰃠" : slider.level <= 0 ? "󰖁" : slider.level < 0.34 ? "󰕿" : slider.level < 0.67 ? "󰖀" : "󰕾"
     color: onFill ? host.colorAccentText : host.colorText
     font.family: host.fontFamily
     font.pixelSize: 26
     Behavior on color { ColorAnimation { duration: 120 * host.motionScale } }
+  }
+  Text {
+    anchors.right: parent.right
+    anchors.rightMargin: 18
+    anchors.verticalCenter: parent.verticalCenter
+    text: Math.round(slider.level * 100) + "%"
+    color: host.colorText
+    font.family: Style.font.family
+    font.pixelSize: 18
+    font.weight: Font.DemiBold
   }
 }
